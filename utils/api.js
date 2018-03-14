@@ -26,7 +26,7 @@ export const saveNewDeck = (title) => {
   return AsyncStorage.mergeItem(
     DECKS_STORAGE_KEY,
     JSON.stringify({
-      [id]: { id, title },
+      [id]: { id, title, questions: [] },
     }),
   )
 }

@@ -1,5 +1,12 @@
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import React, { Component } from 'react'
+import { StyleSheet, Text, View, StatusBar } from 'react-native'
+import { TabNavigator, StackNavigator } from 'react-navigation'
+import { createStore, applyMiddleware } from 'redux'
+import thunk from 'redux-thunk'
+import { Provider } from 'react-redux'
+import { createLogger } from 'redux-logger'
+
+import reducer from './reducers'
 
 import {
   getDecks,
@@ -8,47 +15,65 @@ import {
   addCard,
   clearStorage,
 } from './utils/api'
+import DeckList from './containers/DeckList'
+import AddDeck from './containers/AddDeck'
+import Deck from './containers/Deck'
+import AddQuestion from './containers/AddQuestion'
+import Quiz from './containers/Quiz'
 
-export default class App extends React.Component {
-  state = {
-    decks: {},
-    deck: {},
-  }
+const Tabs = TabNavigator({
+  DeckList: {
+    screen: DeckList,
+    navigationOptions: {
+      tabBarLabel: 'Decks',
+    },
+  },
+  AddDeck: {
+    screen: AddDeck,
+    navigationOptions: {
+      tabBarLabel: 'New Deck',
+    },
+  },
+})
+
+const MainNavigator = StackNavigator({
+  Home: {
+    screen: Tabs,
+  },
+  Deck: {
+    screen: Deck,
+  },
+  AddQuestion: {
+    screen: AddQuestion,
+  },
+  Quiz: {
+    screen: Quiz,
+  },
+})
+
+const logger = createLogger({})
+
+const store = createStore(reducer, applyMiddleware(thunk))
+
+class App extends Component {
   async componentDidMount() {
-    clearStorage()
-    // await getDecks().then((decks) => this.setState({ decks }))
-    await getDeck('123').then((deck) => this.setState({ deck }))
-    await addCard('123', { question: 'hi', answer: 'woop' })
-    await getDeck('123').then((deck) => this.setState({ deck }))
-    await addCard('123', { question: 'wololololol', answer: 'jippie' })
-    await getDeck('123').then((deck) => this.setState({ deck }))
-
-    // await saveNewDeck('test')
-    // await getDecks().then((decks) => this.setState({ decks }))
+    // For testing purpose set api data:
+    await clearStorage()
+    await getDecks().then((decks) => this.setState({ decks }))
+    await saveNewDeck('test')
+    await getDecks().then((decks) => this.setState({ decks }))
   }
 
   render() {
     return (
-      <View style={styles.container}>
-        <View style={styles.container}>
-          <Text>{JSON.stringify(this.state.decks)}</Text>
+      <Provider store={store}>
+        <View style={{ flex: 1 }}>
+          <StatusBar translucent />
+          <MainNavigator />
         </View>
-        <View>
-          <Text>---------------</Text>
-        </View>
-        <View style={styles.container}>
-          <Text>{JSON.stringify(this.state.deck)}</Text>
-        </View>
-      </View>
+      </Provider>
     )
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-})
+export default App
