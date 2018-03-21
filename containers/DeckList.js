@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, ScrollView, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
 
+import * as theme from '../utils/theme'
 import { getDecks } from '../actions'
 
 class DeckList extends Component {
@@ -10,33 +11,42 @@ class DeckList extends Component {
   }
 
   componentDidMount() {
-    this.props.dispatch(getDecks())
+    this.props.getDecks()
   }
 
   render() {
     const { decks } = this.props
 
     return (
-      <View>
+      <ScrollView style={styles.container}>
         {Object.values(decks).map((deck) => (
-          <View key={deck.id}>
+          <View key={deck.id} style={{ paddingBottom: 250 }}>
             <TouchableOpacity
-              onPress={() =>
-                this.props.navigation.navigate('Deck', { deck: deck })
-              }
+              onPress={() => this.props.navigation.navigate('Deck', { deck: deck })}
             >
               <Text>{deck.title}</Text>
               <Text>{deck.questions ? deck.questions.length : 0}</Text>
             </TouchableOpacity>
           </View>
         ))}
-      </View>
+      </ScrollView>
     )
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    padding: theme.space.m,
+    backgroundColor: theme.color.light,
+  },
+})
 
 const mapStateToProps = (state) => ({
   decks: state.decks,
 })
 
-export default connect(mapStateToProps)(DeckList)
+const mapDispatchToProps = {
+  getDecks,
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(DeckList)

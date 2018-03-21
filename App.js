@@ -6,15 +6,11 @@ import thunk from 'redux-thunk'
 import { Provider } from 'react-redux'
 import { createLogger } from 'redux-logger'
 
+import * as theme from './utils/theme'
+
 import reducer from './reducers'
 
-import {
-  getDecks,
-  getDeck,
-  saveNewDeck,
-  addCard,
-  clearStorage,
-} from './utils/api'
+import { getDecks, getDeck, saveNewDeck, addCard, clearStorage } from './utils/api'
 import DeckList from './containers/DeckList'
 import AddDeck from './containers/AddDeck'
 import Deck from './containers/Deck'
@@ -36,38 +32,45 @@ const Tabs = TabNavigator({
   },
 })
 
-const MainNavigator = StackNavigator({
-  Home: {
-    screen: Tabs,
+const MainNavigator = StackNavigator(
+  {
+    Home: {
+      screen: Tabs,
+    },
+    Deck: {
+      screen: Deck,
+    },
+    AddQuestion: {
+      screen: AddQuestion,
+    },
+    Quiz: {
+      screen: Quiz,
+    },
   },
-  Deck: {
-    screen: Deck,
+  {
+    initialRouteName: 'Home',
+    navigationOptions: {},
+    cardStyle: { backgroundColor: theme.color.bg },
   },
-  AddQuestion: {
-    screen: AddQuestion,
-  },
-  Quiz: {
-    screen: Quiz,
-  },
-})
+)
 
 const logger = createLogger({})
 
 const store = createStore(reducer, applyMiddleware(thunk))
 
 class App extends Component {
-  async componentDidMount() {
+  componentDidMount() {
     // For testing purpose set api data:
-    await clearStorage()
-    await getDecks().then((decks) => this.setState({ decks }))
-    await saveNewDeck('test')
-    await getDecks().then((decks) => this.setState({ decks }))
+    // await clearStorage()
+    getDecks().then((decks) => this.setState({ decks }))
+    // await saveNewDeck('test')
+    // await getDecks().then((decks) => this.setState({ decks }))
   }
 
   render() {
     return (
       <Provider store={store}>
-        <View style={{ flex: 1 }}>
+        <View style={styles.container}>
           <StatusBar translucent />
           <MainNavigator />
         </View>
@@ -75,5 +78,11 @@ class App extends Component {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+})
 
 export default App

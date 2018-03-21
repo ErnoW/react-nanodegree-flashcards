@@ -1,5 +1,10 @@
 import React, { Component } from 'react'
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
+
+import * as theme from '../utils/theme'
+
+import Button from '../components/Button'
+import ButtonGroup from '../components/ButtonGroup'
 
 class Deck extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -14,27 +19,35 @@ class Deck extends Component {
     const { deck } = this.props.navigation.state.params
 
     return (
-      <View>
+      <View style={styles.container}>
         <Text>Cards: {deck.questions.length}</Text>
-        <TouchableOpacity
-          onPress={() =>
-            this.props.navigation.navigate('AddQuestion', { deck: deck })
-          }
-        >
-          <Text>Add new Card</Text>
-        </TouchableOpacity>
-        {deck.questions.length > 0 && (
-          <TouchableOpacity
-            onPress={() =>
-              this.props.navigation.navigate('Quiz', { deck: deck })
-            }
-          >
-            <Text>Start quiz</Text>
-          </TouchableOpacity>
+
+        {deck.questions.length > 0 ? (
+          <ButtonGroup>
+            <Button onPress={() => this.props.navigation.navigate('AddQuestion', { deck: deck })}>
+              Add new Card
+            </Button>
+            <Button onPress={() => this.props.navigation.navigate('Quiz', { deck: deck })}>
+              Start quiz
+            </Button>
+          </ButtonGroup>
+        ) : (
+          <ButtonGroup>
+            <Button onPress={() => this.props.navigation.navigate('AddQuestion', { deck: deck })}>
+              Add new Card
+            </Button>
+          </ButtonGroup>
         )}
       </View>
     )
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    padding: theme.space.m,
+    backgroundColor: theme.color.light,
+  },
+})
 
 export default Deck

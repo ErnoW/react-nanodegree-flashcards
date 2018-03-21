@@ -28,7 +28,7 @@ export const saveNewDeck = (title) => {
     JSON.stringify({
       [id]: { id, title, questions: [] },
     }),
-  )
+  ).then(() => ({ id, title, questions: [] }))
 }
 
 export const addCard = (deckId, card) => {

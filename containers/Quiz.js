@@ -1,6 +1,11 @@
 import React, { Component } from 'react'
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import { NavigationActions } from 'react-navigation'
+
+import * as theme from '../utils/theme'
+
+import Button from '../components/Button'
+import ButtonGroup from '../components/ButtonGroup'
 
 class Quiz extends Component {
   state = {
@@ -37,9 +42,7 @@ class Quiz extends Component {
 
   nextQuestion = (scored) => {
     const remaining =
-      this.props.navigation.state.params.deck.questions.length -
-      this.state.index -
-      1
+      this.props.navigation.state.params.deck.questions.length - this.state.index - 1
 
     this.setState((prevState) => ({
       index: remaining > 0 ? prevState.index + 1 : prevState.index,
@@ -56,21 +59,19 @@ class Quiz extends Component {
     const Question = () => (
       <View>
         <Text>{deck.questions[index].question}</Text>
-        <TouchableOpacity onPress={this.showAnswer}>
-          <Text>Show Answer</Text>
-        </TouchableOpacity>
+        <ButtonGroup>
+          <Button onPress={this.showAnswer}>Show Answer</Button>
+        </ButtonGroup>
       </View>
     )
 
     const Answer = () => (
       <View>
         <Text>{deck.questions[index].answer}</Text>
-        <TouchableOpacity onPress={() => this.nextQuestion(true)}>
-          <Text>Good</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => this.nextQuestion(false)}>
-          <Text>Wrong</Text>
-        </TouchableOpacity>
+        <ButtonGroup>
+          <Button onPress={() => this.nextQuestion(true)}>Good</Button>
+          <Button onPress={() => this.nextQuestion(false)}>Wrong</Button>
+        </ButtonGroup>
       </View>
     )
 
@@ -80,17 +81,15 @@ class Quiz extends Component {
         <Text>
           {score} / {deck.questions.length}
         </Text>
-        <TouchableOpacity onPress={this.goBack}>
-          <Text>Go back to deck</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={this.reset}>
-          <Text>Try again</Text>
-        </TouchableOpacity>
+        <ButtonGroup>
+          <Button onPress={this.goBack}>Go back to deck</Button>
+          <Button onPress={this.reset}>Try again</Button>
+        </ButtonGroup>
       </View>
     )
 
     return (
-      <View>
+      <View style={styles.container}>
         {!showAnswer && !finished && <Question />}
         {showAnswer && !finished && <Answer />}
         {finished && <Results />}
@@ -98,5 +97,12 @@ class Quiz extends Component {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    padding: theme.space.m,
+    backgroundColor: theme.color.light,
+  },
+})
 
 export default Quiz
