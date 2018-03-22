@@ -27,7 +27,8 @@ const styles = StyleSheet.create({
     borderColor: theme.color.grey,
   },
   label: {
-    fontSize: theme.font.size.s,
+    fontSize: theme.font.size.m,
+    color: theme.color.grey,
   },
 })
 

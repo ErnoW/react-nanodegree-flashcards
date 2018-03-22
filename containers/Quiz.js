@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import { NavigationActions } from 'react-navigation'
+import { connect } from 'react-redux'
 
 import * as theme from '../utils/theme'
 
@@ -10,26 +11,43 @@ import ButtonGroup from '../components/ButtonGroup'
 class Quiz extends Component {
   state = {
     index: 0,
+    order: [],
     score: 0,
     showAnswer: false,
     finished: false,
   }
 
-  static navigationOptions = ({ navigation }) => {
-    const { deck } = navigation.state.params
+  navigationOptions = ({ navigation }) => ({
+    title: `Quiz: ${navigation.state.params.name}`,
+  })
 
-    return {
-      title: `Quiz: ${deck.title}`,
-    }
+  componentDidMount() {
+    this.props.navigation.setParams({
+      title: this.props.deck.title,
+    })
+
+    this.setState({
+      order: this.randomizedOrder(this.props.deck.questions.length),
+    })
   }
 
   reset = () => {
     this.setState({
       index: 0,
+      order: this.randomizedOrder(this.props.deck.questions.length),
       score: 0,
       showAnswer: false,
       finished: false,
     })
+  }
+
+  randomizedOrder = (length) => {
+    let array = Array.from(Array(length).keys())
+    for (let i = array.length - 1; i > 0; i--) {
+      let j = Math.floor(Math.random() * (i + 1))
+      ;[array[i], array[j]] = [array[j], array[i]]
+    }
+    return array
   }
 
   goBack = () => {
@@ -41,8 +59,7 @@ class Quiz extends Component {
   }
 
   nextQuestion = (scored) => {
-    const remaining =
-      this.props.navigation.state.params.deck.questions.length - this.state.index - 1
+    const remaining = this.props.deck.questions.length - this.state.index - 1
 
     this.setState((prevState) => ({
       index: remaining > 0 ? prevState.index + 1 : prevState.index,
@@ -53,12 +70,12 @@ class Quiz extends Component {
   }
 
   render() {
-    const { deck } = this.props.navigation.state.params
-    const { index, score, showAnswer, finished } = this.state
+    const deck = this.props.deck
+    const { index, order, score, showAnswer, finished } = this.state
 
     const Question = () => (
       <View>
-        <Text>{deck.questions[index].question}</Text>
+        <Text>{deck.questions[order[index]].question}</Text>
         <ButtonGroup>
           <Button onPress={this.showAnswer}>Show Answer</Button>
         </ButtonGroup>
@@ -67,7 +84,7 @@ class Quiz extends Component {
 
     const Answer = () => (
       <View>
-        <Text>{deck.questions[index].answer}</Text>
+        <Text>{deck.questions[order[index]].answer}</Text>
         <ButtonGroup>
           <Button onPress={() => this.nextQuestion(true)}>Good</Button>
           <Button onPress={() => this.nextQuestion(false)}>Wrong</Button>
@@ -90,8 +107,8 @@ class Quiz extends Component {
 
     return (
       <View style={styles.container}>
-        {!showAnswer && !finished && <Question />}
-        {showAnswer && !finished && <Answer />}
+        {order.length > 0 && !showAnswer && !finished && <Question />}
+        {order.length > 0 && showAnswer && !finished && <Answer />}
         {finished && <Results />}
       </View>
     )
@@ -105,4 +122,8 @@ const styles = StyleSheet.create({
   },
 })
 
-export default Quiz
+const mapStateToProps = (state) => ({
+  deck: state.decks[state.currentDeck],
+})
+
+export default connect(mapStateToProps)(Quiz)

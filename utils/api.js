@@ -33,14 +33,16 @@ export const saveNewDeck = (title) => {
 
 export const addCard = (deckId, card) => {
   //TODO: simple check on errors or empty etc
-  return getDeck(deckId).then((deck) => {
-    const questions = deck.questions.concat(card)
+  return getDeck(deckId)
+    .then((deck) => {
+      const questions = deck.questions.concat(card)
 
-    return AsyncStorage.mergeItem(
-      DECKS_STORAGE_KEY,
-      JSON.stringify({
-        [deckId]: { questions },
-      }),
-    )
-  })
+      return AsyncStorage.mergeItem(
+        DECKS_STORAGE_KEY,
+        JSON.stringify({
+          [deckId]: { questions },
+        }),
+      )
+    })
+    .then(() => ({ deckId: deckId, card: card }))
 }

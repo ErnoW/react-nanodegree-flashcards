@@ -59,10 +59,10 @@ const logger = createLogger({})
 const store = createStore(reducer, applyMiddleware(thunk))
 
 class App extends Component {
-  componentDidMount() {
-    // For testing purpose set api data:
+  // For testing purpose set api data:
+  async componentDidMount() {
     // await clearStorage()
-    getDecks().then((decks) => this.setState({ decks }))
+    // getDecks().then((decks) => this.setState({ decks }))
     // await saveNewDeck('test')
     // await getDecks().then((decks) => this.setState({ decks }))
   }
