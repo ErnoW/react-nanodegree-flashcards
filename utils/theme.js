@@ -1,16 +1,16 @@
 export const color = {
   light: '#ffffff',
   grey: '#999999',
-  dark: '#000000',
-  primary: '#ff0000',
-  secondary: '#00ff00',
-  bg: '#eeeeee',
-  alert: '#ff0000',
+  dark: '#101211',
+  primary: '#FF5400',
+  secondary: '#17FFE2',
+  bg: '#dddddd',
+  alert: '#FF1E00',
 }
 
 export const space = {
-  s: 5,
-  m: 15,
+  s: 6,
+  m: 20,
   l: 50,
 }
 
@@ -29,6 +29,6 @@ export const font = {
   size: {
     s: 11,
     m: 16,
-    l: 20,
+    l: 22,
   },
 }
