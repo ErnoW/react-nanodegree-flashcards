@@ -76,9 +76,6 @@ const store = createStore(reducer, applyMiddleware(thunk))
 class App extends Component {
   async componentDidMount() {
     setLocalNotification()
-
-    // For testing purpose clear api data:
-    // await clearStorage()
   }
 
   render() {
