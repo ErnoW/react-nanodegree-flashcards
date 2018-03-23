@@ -17,13 +17,17 @@ class Quiz extends Component {
     finished: false,
   }
 
-  navigationOptions = ({ navigation }) => ({
-    title: `Quiz: ${navigation.state.params.name}`,
-  })
+  static navigationOptions = ({ navigation }) => {
+    if (navigation.state.params != undefined) {
+      return {
+        title: `Quiz: ${navigation.state.params.deckTitle}`,
+      }
+    }
+  }
 
   componentDidMount() {
     this.props.navigation.setParams({
-      title: this.props.deck.title,
+      deckTitle: this.props.deck.title,
     })
 
     this.setState({

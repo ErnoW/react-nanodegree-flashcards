@@ -16,7 +16,7 @@ class AddQuestion extends Component {
     error: '',
   }
 
-  navigationOptions = {
+  static navigationOptions = {
     title: 'New Question',
   }
 

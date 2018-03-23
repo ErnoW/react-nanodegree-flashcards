@@ -6,7 +6,7 @@ import * as theme from '../utils/theme'
 import { getDecks, setDeck } from '../actions'
 
 class DeckList extends Component {
-  navigationOptions = {
+  static navigationOptions = {
     title: 'Overview',
   }
 

@@ -14,7 +14,7 @@ class AddDeck extends Component {
     deckName: '',
   }
 
-  navigationOptions = {
+  static navigationOptions = {
     title: 'New Deck',
     error: '',
   }

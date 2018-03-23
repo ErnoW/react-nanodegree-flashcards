@@ -10,16 +10,19 @@ import Button from '../components/Button'
 import ButtonGroup from '../components/ButtonGroup'
 
 class Deck extends Component {
-  navigationOptions = ({ navigation }) => ({
-    title: `Deck: ${navigation.state.params.title}`,
-  })
+  static navigationOptions = ({ navigation }) => {
+    if (navigation.state.params != undefined) {
+      return {
+        title: `Deck: ${navigation.state.params.deckTitle}`,
+      }
+    }
+  }
 
   componentDidMount() {
-    console.log('props', this.props)
     this.props.getDeck(this.props.deck.id)
 
     this.props.navigation.setParams({
-      title: this.props.deck.title,
+      deckTitle: this.props.deck.title,
     })
   }
 
