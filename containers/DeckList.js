@@ -54,9 +54,6 @@ class DeckList extends Component {
   }
 
   gotoDeck = (deckId) => {
-    // Animated.spring(this.state.animatedValue, {
-    //   toValue: 40,
-    // }).start()
     this.props.setDeck(deckId)
     this.props.navigation.navigate('Deck')
   }
