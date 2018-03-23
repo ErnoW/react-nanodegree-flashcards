@@ -1,9 +1,48 @@
 import React, { Component } from 'react'
-import { View, ScrollView, Text, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, ScrollView, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native'
 import { connect } from 'react-redux'
 
 import * as theme from '../utils/theme'
 import { getDecks, setDeck } from '../actions'
+
+class DeckButton extends Component {
+  state = {
+    animatedValue: new Animated.Value(1),
+  }
+
+  handlePress = () => {
+    Animated.sequence([
+      Animated.spring(this.state.animatedValue, {
+        toValue: 1.2,
+        friction: 2,
+      }),
+      Animated.spring(this.state.animatedValue, {
+        toValue: 1,
+        friction: 5,
+      }),
+    ]).start(this.props.onPress)
+  }
+
+  render() {
+    const deck = this.props.deck
+
+    return (
+      <TouchableOpacity onPress={this.handlePress}>
+        <Animated.View
+          style={[
+            styles.deck,
+            {
+              transform: [{ scale: this.state.animatedValue }],
+            },
+          ]}
+        >
+          <Text style={styles.title}>{deck.title}</Text>
+          <Text styes={styles.count}>{deck.questions ? deck.questions.length : 0}</Text>
+        </Animated.View>
+      </TouchableOpacity>
+    )
+  }
+}
 
 class DeckList extends Component {
   static navigationOptions = {
@@ -15,6 +54,9 @@ class DeckList extends Component {
   }
 
   gotoDeck = (deckId) => {
+    // Animated.spring(this.state.animatedValue, {
+    //   toValue: 40,
+    // }).start()
     this.props.setDeck(deckId)
     this.props.navigation.navigate('Deck')
   }
@@ -27,14 +69,7 @@ class DeckList extends Component {
         {Object.values(decks)
           .sort((a, b) => a.questions.length < b.questions.length)
           .map((deck) => (
-            <TouchableOpacity
-              onPress={() => this.gotoDeck(deck.id)}
-              key={deck.id}
-              style={styles.deck}
-            >
-              <Text style={styles.title}>{deck.title}</Text>
-              <Text styes={styles.count}>{deck.questions ? deck.questions.length : 0}</Text>
-            </TouchableOpacity>
+            <DeckButton onPress={() => this.gotoDeck(deck.id)} deck={deck} key={deck.id} />
           ))}
       </ScrollView>
     )
