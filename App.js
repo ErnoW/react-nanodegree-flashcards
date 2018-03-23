@@ -5,6 +5,7 @@ import { createStore, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
 import { Provider } from 'react-redux'
 import { createLogger } from 'redux-logger'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 import * as theme from './utils/theme'
 
@@ -16,21 +17,35 @@ import AddDeck from './containers/AddDeck'
 import Deck from './containers/Deck'
 import AddQuestion from './containers/AddQuestion'
 import Quiz from './containers/Quiz'
+import { setLocalNotification } from './utils/notification'
 
-const Tabs = TabNavigator({
-  DeckList: {
-    screen: DeckList,
-    navigationOptions: {
-      tabBarLabel: 'Decks',
+const Tabs = TabNavigator(
+  {
+    DeckList: {
+      screen: DeckList,
+      navigationOptions: {
+        tabBarLabel: 'Decks',
+        tabBarIcon: ({ tintColor }) => (
+          <MaterialCommunityIcons name="cards" size={30} color={tintColor} />
+        ),
+      },
+    },
+    AddDeck: {
+      screen: AddDeck,
+      navigationOptions: {
+        tabBarLabel: 'New Deck',
+        tabBarIcon: ({ tintColor }) => (
+          <MaterialCommunityIcons name="plus-box" size={30} color={tintColor} />
+        ),
+      },
     },
   },
-  AddDeck: {
-    screen: AddDeck,
-    navigationOptions: {
-      tabBarLabel: 'New Deck',
+  {
+    tabBarOptions: {
+      activeTintColor: theme.color.primary,
     },
   },
-})
+)
 
 const MainNavigator = StackNavigator(
   {
@@ -59,12 +74,11 @@ const logger = createLogger({})
 const store = createStore(reducer, applyMiddleware(thunk))
 
 class App extends Component {
-  // For testing purpose set api data:
   async componentDidMount() {
+    setLocalNotification()
+
+    // For testing purpose clear api data:
     // await clearStorage()
-    // getDecks().then((decks) => this.setState({ decks }))
-    // await saveNewDeck('test')
-    // await getDecks().then((decks) => this.setState({ decks }))
   }
 
   render() {

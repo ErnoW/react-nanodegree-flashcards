@@ -4,6 +4,7 @@ import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
 
 import * as theme from '../utils/theme'
+import { setLocalNotification, clearLocalNotification } from '../utils/notification'
 
 import Button from '../components/Button'
 import ButtonGroup from '../components/ButtonGroup'
@@ -65,6 +66,10 @@ class Quiz extends Component {
   nextQuestion = (scored) => {
     const remaining = this.props.deck.questions.length - this.state.index - 1
 
+    if (remaining === 0) {
+      clearLocalNotification().then(setLocalNotification)
+    }
+
     this.setState((prevState) => ({
       index: remaining > 0 ? prevState.index + 1 : prevState.index,
       score: scored ? prevState.score + 1 : prevState.score,
@@ -78,8 +83,9 @@ class Quiz extends Component {
     const { index, order, score, showAnswer, finished } = this.state
 
     const Question = () => (
-      <View>
-        <Text>{deck.questions[order[index]].question}</Text>
+      <View style={styles.block}>
+        <Text>Question</Text>
+        <Text style={styles.big}>{deck.questions[order[index]].question}</Text>
         <ButtonGroup>
           <Button onPress={this.showAnswer}>Show Answer</Button>
         </ButtonGroup>
@@ -87,8 +93,9 @@ class Quiz extends Component {
     )
 
     const Answer = () => (
-      <View>
-        <Text>{deck.questions[order[index]].answer}</Text>
+      <View style={styles.block}>
+        <Text>Answer</Text>
+        <Text style={styles.big}>{deck.questions[order[index]].answer}</Text>
         <ButtonGroup>
           <Button onPress={() => this.nextQuestion(true)}>Good</Button>
           <Button onPress={() => this.nextQuestion(false)}>Wrong</Button>
@@ -98,8 +105,9 @@ class Quiz extends Component {
 
     const Results = () => (
       <View>
-        <Text>Well done your score is:</Text>
-        <Text>
+        <Text style={styles.big}>Well done!</Text>
+        <Text>Your score is:</Text>
+        <Text style={styles.score}>
           {score} / {deck.questions.length}
         </Text>
         <ButtonGroup>
@@ -109,10 +117,17 @@ class Quiz extends Component {
       </View>
     )
 
+    const Remaining = () => (
+      <View>
+        <Text>Questions remaining: {deck.questions.length - this.state.index}</Text>
+      </View>
+    )
+
     return (
       <View style={styles.container}>
         {order.length > 0 && !showAnswer && !finished && <Question />}
         {order.length > 0 && showAnswer && !finished && <Answer />}
+        {!finished && <Remaining />}
         {finished && <Results />}
       </View>
     )
@@ -123,6 +138,19 @@ const styles = StyleSheet.create({
   container: {
     padding: theme.space.m,
     backgroundColor: theme.color.light,
+  },
+  block: {
+    marginBottom: theme.space.m,
+  },
+  big: {
+    fontSize: theme.font.size.l,
+    color: theme.color.primary,
+    marginVertical: theme.space.m,
+  },
+  score: {
+    fontSize: 40,
+    color: theme.color.primary,
+    marginVertical: theme.space.m,
   },
 })
 
