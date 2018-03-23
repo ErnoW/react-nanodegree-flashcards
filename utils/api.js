@@ -8,7 +8,6 @@ export const clearStorage = () => {
 }
 
 export const getDecks = () => {
-  //TODO: simple check on errors or empty etc
   return AsyncStorage.getItem(DECKS_STORAGE_KEY).then(formatResults)
 }
 
