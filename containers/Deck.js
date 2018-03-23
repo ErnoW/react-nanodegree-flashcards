@@ -31,7 +31,10 @@ class Deck extends Component {
 
     return deck ? (
       <View style={styles.container}>
-        <Text>Cards: {deck.questions.length}</Text>
+        <View style={styles.summary}>
+          <Text>Deck name: {deck.title}</Text>
+          <Text>Cards: {deck.questions.length}</Text>
+        </View>
 
         {deck.questions.length > 0 ? (
           <ButtonGroup>
@@ -58,6 +61,9 @@ const styles = StyleSheet.create({
   container: {
     padding: theme.space.m,
     backgroundColor: theme.color.light,
+  },
+  summary: {
+    marginBottom: theme.space.m,
   },
 })
 

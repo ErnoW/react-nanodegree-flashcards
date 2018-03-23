@@ -12,9 +12,9 @@ class DeckButton extends Component {
 
   handlePress = () => {
     Animated.sequence([
-      Animated.spring(this.state.animatedValue, {
+      Animated.timing(this.state.animatedValue, {
+        duration: 150,
         toValue: 1.2,
-        friction: 2,
       }),
       Animated.spring(this.state.animatedValue, {
         toValue: 1,
