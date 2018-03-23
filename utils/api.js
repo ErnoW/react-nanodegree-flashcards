@@ -13,7 +13,6 @@ export const getDecks = () => {
 }
 
 export const getDeck = (id) => {
-  //TODO: simple check on errors or empty etc
   return AsyncStorage.getItem(DECKS_STORAGE_KEY).then((results) => {
     const res = formatResults(results)
     return res[id]
@@ -21,7 +20,10 @@ export const getDeck = (id) => {
 }
 
 export const saveNewDeck = (title) => {
-  //TODO: simple check on errors or empty etc
+  if (!title) {
+    return Promise.reject(new Error('invalid title'))
+  }
+
   const id = uuid()
   return AsyncStorage.mergeItem(
     DECKS_STORAGE_KEY,
@@ -32,7 +34,16 @@ export const saveNewDeck = (title) => {
 }
 
 export const addCard = (deckId, card) => {
-  //TODO: simple check on errors or empty etc
+  if (!deckId) {
+    return Promise.reject(new Error('unknown deck'))
+  }
+  if (!card.question) {
+    return Promise.reject(new Error('invalid question'))
+  }
+  if (!card.answer) {
+    return Promise.reject(new Error('invalid answer'))
+  }
+
   return getDeck(deckId)
     .then((deck) => {
       const questions = deck.questions.concat(card)

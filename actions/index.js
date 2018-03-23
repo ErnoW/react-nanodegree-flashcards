@@ -27,7 +27,7 @@ const getDecksRequest = () => {
 const getDecksError = (error) => {
   return {
     type: GET_DECKS_ERROR,
-    error: error,
+    error: error.message,
   }
 }
 
@@ -47,7 +47,7 @@ const getDeckRequest = () => {
 const getDeckError = (error) => {
   return {
     type: GET_DECK_ERROR,
-    error: error,
+    error: error.message,
   }
 }
 
@@ -81,7 +81,7 @@ const addDeckSuccess = (payload) => {
 const addDeckError = (error) => {
   return {
     type: ADD_DECK_ERROR,
-    error: error,
+    error: error.message,
   }
 }
 
@@ -101,7 +101,7 @@ const addCardSuccess = (payload) => {
 const addCardError = (error) => {
   return {
     type: ADD_CARD_ERROR,
-    error: error,
+    error: error.message,
   }
 }
 

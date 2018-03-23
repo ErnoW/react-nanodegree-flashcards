@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
 
 import * as theme from '../utils/theme'
-import { addDeck } from '../actions'
+import { addDeck, setDeck } from '../actions'
 
 import Input from '../components/Input'
 import Button from '../components/Button'
@@ -16,24 +16,40 @@ class AddDeck extends Component {
 
   navigationOptions = {
     title: 'New Deck',
+    error: '',
   }
 
   handleAddDeck = () => {
-    this.props.addDeck(this.state.deckName).then((response) => {
-      this.props.navigation.navigate('Deck')
-    })
+    this.props
+      .addDeck(this.state.deckName)
+      .then((response) => {
+        this.setState({
+          deckName: '',
+          error: '',
+        })
+        this.props.setDeck(response.payload.id)
+        this.props.navigation.navigate('Deck')
+      })
+      .catch((error) =>
+        this.setState({
+          error: error.message,
+        }),
+      )
   }
 
   render() {
+    const { deckName, error } = this.state
+
     return (
       <View style={styles.container}>
         <Paragraph>To add a new deck, first provide a title below.</Paragraph>
         <Input
           onChangeText={(deckName) => this.setState({ deckName })}
-          value={this.state.deckName}
+          value={deckName}
           placeholder="Enter a title..."
           label="Deck title"
         />
+        {!!error && <Paragraph style={styles.error}>Error: {error}.</Paragraph>}
         <Button onPress={this.handleAddDeck}>Add deck</Button>
       </View>
     )
@@ -45,10 +61,14 @@ const styles = StyleSheet.create({
     padding: theme.space.m,
     backgroundColor: theme.color.light,
   },
+  error: {
+    color: theme.color.alert,
+  },
 })
 
 const mapDispatchToProps = {
   addDeck,
+  setDeck,
 }
 
 export default connect(null, mapDispatchToProps)(AddDeck)

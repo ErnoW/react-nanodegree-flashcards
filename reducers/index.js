@@ -5,6 +5,7 @@ import {
   GET_DECK_SUCCESS,
   SET_DECK,
   ADD_DECKS_SUCCESS,
+  ADD_DECK_SUCCESS,
   ADD_CARD_SUCCESS,
 } from '../actions'
 
@@ -16,6 +17,11 @@ const decks = (state = {}, action) => {
       return state
     case ADD_DECKS_SUCCESS:
       return { ...state, ...action.payload }
+    case ADD_DECK_SUCCESS:
+      return {
+        ...state,
+        [action.payload.id]: action.payload,
+      }
     case ADD_CARD_SUCCESS:
       return {
         ...state,

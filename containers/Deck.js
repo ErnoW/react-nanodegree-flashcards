@@ -15,6 +15,7 @@ class Deck extends Component {
   })
 
   componentDidMount() {
+    console.log('props', this.props)
     this.props.getDeck(this.props.deck.id)
 
     this.props.navigation.setParams({
@@ -25,7 +26,7 @@ class Deck extends Component {
   render() {
     const deck = this.props.deck
 
-    return (
+    return deck ? (
       <View style={styles.container}>
         <Text>Cards: {deck.questions.length}</Text>
 
@@ -44,6 +45,8 @@ class Deck extends Component {
           </ButtonGroup>
         )}
       </View>
+    ) : (
+      <View style={styles.container} />
     )
   }
 }

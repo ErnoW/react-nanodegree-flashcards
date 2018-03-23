@@ -3,8 +3,8 @@ import { Text, StyleSheet } from 'react-native'
 
 import * as theme from '../utils/theme'
 
-const Paragraph = ({ children }) => {
-  return <Text style={styles.paragraph}>{children}</Text>
+const Paragraph = ({ children, style = {} }) => {
+  return <Text style={[styles.paragraph, style]}>{children}</Text>
 }
 
 const styles = StyleSheet.create({

@@ -5,6 +5,7 @@ export const color = {
   primary: '#ff0000',
   secondary: '#00ff00',
   bg: '#eeeeee',
+  alert: '#ff0000',
 }
 
 export const space = {
